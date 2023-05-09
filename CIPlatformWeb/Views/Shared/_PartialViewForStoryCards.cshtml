@@ -1,0 +1,132 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model StoryPageViewModel;
+
+@{
+    PaginationViewModel pager = new PaginationViewModel();
+    int pageNo = 0;
+    if (ViewBag.storyPager != null)
+    {
+        pager = ViewBag.storyPager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<style>
+    .card-image-part{
+        height: 250px;
+    }
+
+    .card-image-part img{
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+
+<div class="container-fluid py-3 mb-5">
+    <!-- user stories heading start-->
+    <h1 class="container-fluid text-center mb-3 w-50 p-2">User Stories</h1>
+    <!-- user stories heading end -->
+    <!-- story listing section start -->
+    <div class="container-fluid grid-container" style="padding: 0 5%">
+        <div class="row">
+            @if (Model?.StoryList?.Count() > 0)
+            {
+                foreach (var item in Model.StoryList)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-image-part position-relative">
+                                @{
+                                    StoryMedium? storyMedia = Model?.StoryMediaList?.Where(m => m.StoryId == item.StoryId && m.Type != "video").FirstOrDefault();
+                                }
+                                @if(storyMedia != null)
+                                {
+                                    <img src="/StoryMedia/@storyMedia?.Path" alt="StoryMedia" class="w-100">
+                                }
+                                else
+                                {
+                                    <img src="~/images/story-default.jpg" alt="StoryMedia" class="w-100">
+                                }
+                                <div class="overlay">
+                                    @{
+                                        var views = item.ViewCount;
+                                        views = views + 1;
+                                    }
+                                    <a asp-controller="Story" asp-action="StoryDetail" asp-route-storyId="@item.StoryId" asp-route-views="@views"
+                               class="btn d-flex align-items-center justify-content-center mx-auto my-4 px-3 py-2"
+                               id="view-details-Btn">
+                                        <p class="mb-0 pe-4 text-white">View Details</p>
+                                        <img src="/images/right-arrow2.png" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body p-0 position-relative">
+                                <div class="position-absolute card-pill">
+                                    <small class="px-3 py-1">@item.Mission.MissionTheme.Title</small>
+                                </div>
+                                <h5 class="card-title mt-4 px-3">@item.Title</h5>
+                                @Html.Raw("<div class='card-text px-3 story-desc'>" + @item.Description + "</div>")
+                                <div class="d-flex align-items-center container mt-3 mb-4 px-4">
+                                    <img class="volunteer-img me-3" src="@item.User.Avatar" alt="">
+                                    <div>
+                                        <h5>@item.User.FirstName @item.User.LastName</h5>
+                                        <small class="mb-0 d-block">@item.CreatedAt.ToString("dddd, MMMM dd, yyyy, hh:mm tt")</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="container text-center">
+                    <h4>No Stories yet...</h4>
+                </div>
+            }
+            <!-- Pagination -->
+            <div class="container-fluid mb-5 mb-sm-5">
+                @if (pager.TotalPages > 0)
+                {
+                    <ul class="pagination justify-content-center mt-4 px-5" id="pagination">
+
+                        @if (pager.CurrentPage > 1)
+                        {
+                            <li class="page-item mx-2">
+                                <a class="page-link cursor" onclick="storyListing(1)"> &laquo; </a>
+                            </li>
+                            <li class="page-item mx-2">
+                                <a class="page-link cursor" onclick="storyListing(@(pager.CurrentPage - 1))"> &lsaquo; </a>
+                            </li>
+                        }
+
+                        @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                        {
+                            <li class="page-item mx-2">
+                                <a class="page-link cursor @(pge == pager.CurrentPage ? "active" : "")" onclick="storyListing(@pge)"> @pge </a>
+                            </li>
+                        }
+
+                        @if (pager.CurrentPage < pager.TotalPages)
+                        {
+                            <li class="page-item mx-2">
+                                <a class="page-link cursor" onclick="storyListing(@(pager.CurrentPage + 1))"> &rsaquo; </a>
+                            </li>
+                            <li class="page-item mx-2">
+                                <a class="page-link cursor" onclick="storyListing(@pager.TotalPages)"> &raquo; </a>
+                            </li>
+                        }
+
+
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- story listing section end -->
+</div>
+
+

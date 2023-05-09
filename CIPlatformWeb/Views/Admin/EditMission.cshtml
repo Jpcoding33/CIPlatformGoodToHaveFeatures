@@ -1,0 +1,372 @@
+﻿@model MissionDetails;
+
+@{
+    ViewData["Title"] = "EditMissionDetail";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/AddEditMission.css" />
+
+<div class="container-fluid p-0">
+    <div class="border-bottom add-edit-heading">
+        <h5 class="heading">Edit Mission</h5>
+    </div>
+    <div class="form">
+        <form class="needs-validation" asp-controller="Admin" asp-action="EditMission" method="post" enctype="multipart/form-data">
+            <div class="form-content">
+                <div hidden>
+                    <input asp-for="MissionId" type="text" class="form-control" id="missionId">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="missionTitle">Mission Title</label>
+                    <input asp-for="Title" type="text" class="form-control" id="missionTitle"
+                           placeholder="Enter mission title">
+                    <span class="text-danger" asp-validation-for="Title"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="missionShortDesc">Short Description</label>
+                    <textarea asp-for="ShortDescription" rows="3" class="form-control" id="missionShortDesc"
+                              placeholder="Enter short description"></textarea>
+                    <span class="text-danger" asp-validation-for="ShortDescription"></span>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1" for="description">Description</label>
+                    <textarea asp-for="Description" class="w-100 hidden-by-tinymce" style="min-height: 300px" id="missionDescription"></textarea>
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <p id="" class="ps-3"><span id="character_count"></span>/40000</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="missCountry">Country</label>
+                            <select asp-for="CountryId" class="form-select select" id="missCountry">
+                                @foreach (var country in Model.CountryList)
+                                {
+                                    <option value="@country.CountryId">@country.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CountryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="casCityAddMission">City</label>
+                            <select asp-for="CityId" class="form-select select" id="casCityEditMission">
+                            </select>
+                            <span asp-validation-for="CityId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="organizationName">Organization Name</label>
+                    <input asp-for="OrganizationName" type="text" class="form-control" id="organizationName"
+                           placeholder="Enter organization name">
+                    <span class="text-danger" asp-validation-for="OrganizationName"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="organizationDetail">Organization Detail</label>
+                    <textarea asp-for="OrganizationDetail" rows="3" class="form-control" id="organizationDetail"
+                              placeholder="Enter organization detail"></textarea>
+                    <span class="text-danger" asp-validation-for="OrganizationDetail"></span>
+                </div>
+                <div class="row my-3">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="mb-1" for="startDate">Select StartDate</label>
+                            <input asp-for="StartDate" type="date" class="form-control" id="startDate">
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="mb-1" for="endDate">Select EndDate</label>
+                            <input asp-for="EndDate" type="date" class="form-control" id="endDate">
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="missionType">Mission Type</label>
+                            <select asp-for="MissionType" class="form-select select" id="missionType">
+                                <option value="Time">Time Based</option>
+                                <option value="Goal">Goal Based</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="MissionType"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="missionTheme">Mission Theme</label>
+                            <select asp-for="MissionThemeId" class="form-select select" id="missionTheme">
+                                <option value="">Select Mission Theme</option>
+                                @foreach (var theme in Model.ThemeList)
+                                {
+                                    <option value="@theme.MissionThemeId">@theme.Title</option>
+                                }
+                            </select>
+                            <span asp-validation-for="MissionThemeId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="forTimeBasedMiss">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="totalSeats">Total Seats</label>
+                            <input asp-for="TotalSeats" type="number" class="form-control" id="totalSeats"
+                                   placeholder="Enter total seats">
+                            <span class="text-danger" asp-validation-for="TotalSeats"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="missionDeadline">Select Mission Deadline</label>
+                            <input asp-for="MissionDeadline" type="date" class="form-control" id="missionDeadline">
+                            <span asp-validation-for="MissionDeadline" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="forGoalBasedMiss">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="totalGoal">Goal Value</label>
+                            <input asp-for="GoalValue" type="number" class="form-control" id="totalGoal"
+                                   placeholder="Enter total goal value">
+                            <span class="text-danger" asp-validation-for="GoalValue"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="totalSeats">Goal Objective</label>
+                            <input asp-for="GoalObjectiveText" type="text" class="form-control" id="totalSeats"
+                                   placeholder="Enter goal objective">
+                            <span class="text-danger" asp-validation-for="GoalObjectiveText"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="missAvailabilty">Mission Availability</label>
+                    <select asp-for="Availability" class="form-select select" id="missAvailabilty">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="week-end">Weekend</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="Availability"></span>
+                </div>
+                <div class="form-group">
+                    <div class="label">
+                        <p class="mb-1">Upload Documents</p>
+                    </div>
+                    <div>
+                        <label class="preview-mission-docs d-block"></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1" for="viedoUrl">Enter Viedo URL</label>
+                    <input asp-for="VideoUrl" type="text" class="form-control" id="videoUrl" placeholder="Enter Youtube Viedo URL...">
+                    <span asp-validation-for="VideoUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="label">
+                        <p class="mb-1">Upload Images</p>
+                    </div>
+                    <div>
+                        <label class="preview-mission-image d-block"></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="selMissSkills">Mission Skills</label>
+                    <div class="border px-3 py-2 d-flex flex-column" id="selMissSkills">
+                    </div>
+                    <div hidden>
+                        <ul id="mission-skills">
+                            @foreach (var missionSkills in Model.MissionSkillList)
+                            {
+                                <li value="@missionSkills.SkillId">@missionSkills.Skill.SkillName</li>
+                            }
+                        </ul>
+                    </div>
+                    <a class="btn rounded-pill mt-3 px-3 addMissSkillsbtn" data-bs-toggle="modal" data-bs-target="#addMissSkills">Add Mission Skills</a>
+                    <div class="modal fade" id="addMissSkills" tabindex="-1" aria-labelledby="e" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" id="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="">Add Your Skills</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container">
+                                        <br />
+                                        <div class="row">
+                                            <div class="dual-list list-left col-lg-5 col-12">
+                                                <div class="well">
+                                                    <div>
+                                                        <h5 class="mb-2 mt-3 fw-bold border p-2 shadow-sm rounded">Available Skills</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group d-flex align-items-center position-relative">
+                                                                <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                                                                <i class="bi bi-search px-2 search-skill-icon position-absolute"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="list-group w-100" id="available" multiple>
+                                                        @foreach (Skill skillList in @Model.SkillList)
+                                                        {
+                                                            <li class="list-group-item" value="@skillList.SkillId">@skillList.SkillName</li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="list-arrows col-lg-1 col-12">
+                                                <a class="btn btn-default btn-sm move-right">
+                                                    <i class="bi bi-caret-right-fill"></i>
+                                                </a>
+                                                <a class="btn btn-default btn-sm move-left">
+                                                    <i class="bi bi-caret-left-fill"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="dual-list list-right col-lg-5 col-12">
+                                                <div class="well">
+                                                    <div>
+                                                        <h5 class="mb-2 mt-3 fw-bold border p-2 shadow-sm rounded">Selected Skills</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="input-group d-flex align-items-center position-relative">
+                                                                <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                                                                <i class="bi bi-search px-2 search-skill-icon position-absolute"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="list-group w-100" id="selected" multiple>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn cancel-modal-btn rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn save-skill-btn rounded-pill" onclick="" id="save-skills">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <a asp-controller="Admin" asp-action="MissionDetails" class="btn px-4 mb-5 cancel-btn rounded-pill me-4">Cancel</a>
+                <button class="btn px-4 mb-5 submit-btn rounded-pill" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
+<script src="~/js/AddEditMission.js"></script>
+<script src="~/js/AddEditDocument.js"></script>
+<script type="text/javascript">
+    
+    $('#mission').addClass('active');
+
+    $(document).ready(function () {
+        var cId = $('#missCountry').val();
+        var mId = $('#missionId').val();
+        editMissCasCity(cId, mId);
+    });
+
+    $('#missCountry').change(function () {
+        var cId = $('#missCountry').val();
+        editMissCasCity(cId, 0);
+    });
+
+    function editMissCasCity(cId, mId) {
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/EditMissCasCity',
+            data: { "countryId": cId, "missionId": mId },
+            success: function (data) {
+                $('#casCityEditMission').empty();
+                $.each(data.cities, function (i, city) {
+                    $('#casCityEditMission').append('<option value=' + city.cityId + '>' + city.name + '</option>');
+                });
+                var IsExists = false;
+                $('#casCityEditMission option').each(function () {
+                    if (this.value == data.cityId) {
+                        IsExists = true;
+                        return 1;
+                    }
+                });
+                if (IsExists == true) {
+                    $("#casCityEditMission").val(data.cityId).change();
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+    //for mission images
+    if (@Model.MissionMediumList.Count() == 0) {
+        $('.preview-mission-image').html("");
+        $(".preview-mission-image").imageUploader({});
+    }
+    else {
+        $('.preview-mission-image').html("");
+        var i = 1;
+        let preloadedimages = [];
+        var media = @Html.Raw(Json.Serialize(@Model.MissionMediumList));
+        for (let j = 0; j < media.length; j++) {
+            if (media[j].mediaType != 'video') {
+                let imgPath = media[j].mediaPath;
+                var content = {
+                    id: i, src: "/MissionMedia/" + imgPath
+                };
+                i++;
+                preloadedimages.push(content);
+            }
+            else {
+                $("#videoUrl").val(media[j].mediaPath);
+            }
+        }
+        $('.preview-mission-image').imageUploader({
+            preloadedimage: preloadedimages
+        });
+    }
+
+    //for missions documents
+    if (@Model.MissionDocumentList.Count() == 0) {
+        $('.preview-mission-docs').html("");
+        $(".preview-mission-docs").docsUploader({});
+    }
+    else {
+
+        $('.preview-mission-docs').html("");
+        var y = 1;
+        let preloadeddocument = [];
+        var docs = @Html.Raw(Json.Serialize(@Model.MissionDocumentList));
+
+        for (let x = 0; x < docs.length; x++) {
+            let docPath = docs[x].documentPath;
+            var content = {
+                id: y, src: "/MissionDocuments/" + docPath
+            };
+            y++;
+            preloadeddocument.push(content);
+        }
+        $('.preview-mission-docs').docsUploader({
+            preloadeddocs: preloadeddocument
+        });
+    }
+
+</script>

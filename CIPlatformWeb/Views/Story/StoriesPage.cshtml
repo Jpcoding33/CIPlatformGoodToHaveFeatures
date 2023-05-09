@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Story Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model StoryPageViewModel;
+@*story listing page css*@
+<link rel="stylesheet" href="~/css/StoriesPage.css" asp-append-version="true" />
+
+
+<!-- story posting and listing start -->
+<div class="container-fluid p-0">
+    <!-- story posting section start -->
+    <div class="" id="shareStorySecImg">
+        <div id="shareStory" class="d-flex justify-content-center flex-column my-auto mx-auto h-100">
+            <p class="text-center text-white px-5">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur
+                similique
+                iste, numquam vitae
+                quo, esse modi, ipsa ad eos non corrupti id voluptatibus repudiandae! Architecto ipsa
+                reprehenderit voluptatibus nobis at molestiae doloremque, ut est pariatur.
+            </p>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Story" asp-action="ShareStory" class="btn d-flex align-items-center justify-content-center mx-auto my-4 px-4 py-3"
+                   id="shareStoryBtn">
+                    <p class="mb-0 pe-4 text-white">Share your Story</p>
+                    <img src="/images/right-arrow2.png" alt="">
+                </a>
+            }
+            else
+            {
+                <button class="btn d-flex align-items-center justify-content-center mx-auto my-4 px-4 py-3"
+                   id="shareStoryBtn" onclick="Alert('Please Login First!')">
+                    <p class="mb-0 pe-4 text-white">Share your Story</p>
+                    <img src="/images/right-arrow2.png" alt="">
+                </button>
+            }
+        </div>
+    </div>
+    <!-- story posting section end -->
+    <div id="story-list">
+
+    </div>
+    @*<partial name="_PartialViewForStoryCards"></partial>*@
+</div>
+<!-- story posting and listing end -->
+@*story listing javascript*@
+<script>
+    $(document).ready(function () {
+        storyListing(1);
+    });
+    function storyListing(pg) {
+        $.ajax({
+            url: "/Story/StoryCardData",
+            method: "POST",
+            dataType: "html",
+            data: { "pg": pg },
+            success: function (data) {
+
+                $('#story-list').html("");
+                $('#story-list').html(data);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+</script>

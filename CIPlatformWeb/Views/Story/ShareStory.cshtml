@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Share Story Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model StoryPageViewModel;
+
+<link rel="stylesheet" href="https://www.tiny.cloud/css/codepen.min.css" />
+<link rel="stylesheet" href="~/css/ShareStoryForm.css" />
+
+
+<div class="container px-4 px-sm-2 mb-5 pb-5">
+    @*heading*@
+    <h1 class="my-4">Share your story</h1>
+
+    @*story form*@
+    <form enctype="multipart/form-data" method="post" id="story-form">
+        <div class="row">
+            <div class="col-12 col-md-4 form-group mb-4">
+                <label class="mb-1" for="missionDropDownList">Select Mission</label>
+                <select asp-for="MissionId" class="form-select select" id="missionDropDownList" onchange="getDraftStory()">
+                    <option value="">Select Mission</option>
+                    @foreach (var item in Model.MissionApplicationList)
+                    {
+                        <option value="@item.Mission.MissionId">@item.Mission.Title, @item.Mission.City.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="MissionId" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-4 form-group mb-4">
+                <label class="mb-1" for="storyTitle">My Story Title</label>
+                <input asp-for="Title" type="text" class="form-control" id="storyTitle" placeholder="Enter Story Title..." maxlength="255">
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-4 form-group mb-4">
+                <label class="mb-1" for="date">Date</label>
+                <input asp-for="DateCreated" value="" type="date" class="form-control" id="dateCreated">
+                <span asp-validation-for="DateCreated" class="text-danger"></span>
+            </div>
+            <div class="col-12 mb-4" id="textarea">
+                <label class="mb-1" for="myStory">My Story</label>
+                <textarea asp-for="Description" class="w-100" style="min-height: 300px" id="myStory"></textarea>
+                <span class="text-danger d-none" id="story-desc">Required!</span>
+            </div>
+            <div class="col-12 mb-4">
+                <label class="mb-1" for="viedoUrl">Enter Viedo URL</label>
+                <input asp-for="VideoUrls" type="text" class="form-control" id="videoUrl" placeholder="Enter Youtube Viedo URL...">
+                <span asp-validation-for="VideoUrls" class="text-danger"></span>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="label">
+                    <p class="mb-1">Upload your Photos</p>
+                </div>
+                <div>
+                    <label class="preview-image d-block"></label>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <a asp-controller="Story" asp-action="StoriesPage" style="width: 100px" class="btn border cancel-btn rounded-pill px-4 mb-3">Cancel</a>
+                    </div>
+                    <div class="col-12 col-sm-6 text-sm-end">
+                        <button asp-controller="Story" asp-action="SaveThisStory" style="width: 100px" class="btn rounded-pill px-4 mb-3 me-3 save-story" id="">Save</button>
+                        <button asp-controller="Story" asp-action="SubmitThisStory" style="width: 100px" class="btn rounded-pill px-4 mb-3 submit-story" disabled="disabled" id="">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".preview-image").imageUploader({});
+    });
+
+    $("#story-form").on("submit", function (event) {
+        let storyDesc = tinymce.activeEditor.getContent();;
+        if (storyDesc == "") {
+            $('#story-desc').removeClass('d-none');
+            event.preventDefault();
+        }
+        else{
+            $('#story-desc').addClass('d-none');
+        }
+    });
+</script>
+
+

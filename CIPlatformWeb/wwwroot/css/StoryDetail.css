@@ -1,0 +1,72 @@
+﻿.recommen-to-co, .open-mission {
+    height: 50px;
+    border: 1px solid grey;
+    border-radius: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.open-mission{
+    color: #F88634;
+    border: 1px solid #F88634;
+    background: white;
+}
+    .open-mission:hover i{
+        color: white;
+        transition: 0.5s;
+    }
+
+    .open-mission:hover {
+        background: #F88634;
+        color: white;
+        transition: 0.5s;
+    }
+.recommen-to-co:hover {
+    box-shadow: 0 0 5px gray;
+    transition: 0.5s;
+}
+
+.thisUser {
+    width: 15%;
+    height: 15%;
+    border-radius: 50%;
+    border: 5px solid rgb(232, 232, 232);
+}
+
+.totalViews{
+    border: 1px solid black;
+    padding: 0 10px;
+    border-radius: 20px;
+}
+
+.why-i-volunteer{
+    text-align: justify;
+    text-indent: 50px;
+}
+
+/*loader for sending mail*/
+#storyPageLoader {
+    height: 50vh;
+}
+
+    #storyPageLoader div {
+        width: 3rem;
+        height: 3rem;
+        margin-top: 15%;
+    }
+
+/*image style color-profile recommended user*/
+.user-list {
+    display: flex;
+    align-items: center;
+}
+
+.rec-user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 30%;
+}
+
+.modal-body {
+    max-height: 300px;
+    overflow-x: hidden;
+}

@@ -1,0 +1,191 @@
+/* grid and list view buttons start */
+#gridView,
+#listView {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+    #gridView:hover,
+    #listView:hover {
+        background-color: rgb(239, 239, 239);
+    }
+/* grid and list view buttons start */
+
+/*loader*/
+#loader div {
+    width: 10rem;
+    height: 10rem;
+    margin-top: 15%;
+}
+
+/*loader for sending mail*/
+#volPageLoader {
+    height: 50vh;
+}
+
+    #volPageLoader div {
+        width: 3rem;
+        height: 3rem;
+        margin-top: 15%;
+    }
+
+/* mission card start */
+#mission-img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.card-btn {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+}
+
+/*approval status*/
+#ApprovalStatus {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    background-color: white;
+    padding: 2px 10px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+#location {
+    position: absolute;
+    top: 1rem;
+    right: 10px;
+    border-radius: 20px;
+}
+
+#likeThisMission {
+    position: absolute;
+    bottom: 65px;
+    right: 10px;
+    background: rgba(255,255,255,0.75);
+    border: 1px solid #e3e3e3;
+}
+
+#shareToFriend {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    background: rgba(255,255,255,0.75);
+    border: 1px solid #e3e3e3;
+}
+    #likeThisMission:hover, #shareToFriend:hover {
+        box-shadow: 0 0 5px gray;
+        background: rgba(255,255,255,1);
+        border: 0;
+    }
+
+    #missionTheme {
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px;
+        background-color: white;
+        border: 1px solid #e3e3e3;
+    }
+
+.card-title, .miss-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.titleForClosedMiss, .descForClosedMiss {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+.rating-star {
+    width: 20px;
+    height: 20px;
+}
+
+#missionPeriod {
+    position: absolute;
+    top: -15px;
+    background-color: white;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    border-radius: 20px;
+}
+
+/*image style color-profile recommended user*/
+.user-list {
+    display: flex;
+    align-items: center;
+}
+
+.rec-user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 30%;
+}
+
+
+/* mission apply now button end */
+/* mission card start */
+
+
+/* mission listing cards start */
+.card {
+    height: 97%;
+    margin-bottom: 3%;
+}
+
+.card-img{
+    border-bottom: 1px solid #e3e3e3;
+    border-collapse: collapse;
+    border-radius: 0.125rem;
+}
+
+.list-view .row > [class*=col-] {
+    max-width: 100%;
+    flex: 0 0 100%;
+    margin: 10px 0;
+}
+
+.list-view .card {
+    flex-direction: row;
+    height: 420px;
+}
+
+.list-view .card-img {
+    width: 40%;
+    height: 100%;
+}
+
+.list-view .card-body {
+    width: 60%;
+}
+
+.list-view .card > .card-img-top {
+    width: auto;
+}
+
+.list-view .card .card-body {
+    display: inline-block;
+}
+.modal-content{
+    max-height: 500px;
+    overflow-y: scroll;
+}
+.modal-body{
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+searchtab:focus{
+    box-shadow: none;
+}

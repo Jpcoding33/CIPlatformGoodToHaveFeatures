@@ -1,0 +1,139 @@
+﻿@model StoryDetails;
+
+@{
+    ViewData["Title"] = "ViewStoryDetail";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/StoryDetail.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/slider.css" asp-append-version="true" />
+
+<style type="text/css">
+
+    .story-approve-btn, .story-decline-btn {
+        border: 1px solid transparent;
+        box-shadow: 0 0 2px gray;
+    }
+
+        .story-approve-btn:hover {
+            box-shadow: 0 0 5px green;
+        }
+
+        .story-decline-btn:hover {
+            box-shadow: 0 0 5px red;
+        }
+</style>
+
+<div class="container-fluid my-3" style="padding: 0 5%">
+    <div class="row">
+        <div class="col-12 col-lg-6 mx-auto justify-content-center">
+            @if (Model.StoryDetail.StoryMedia.Any())
+            {
+                <!-- Container for the image gallery -->
+                <div style="height: 100%">
+
+                    <!-- Full-width images with number text -->
+                    <div class="position-relative" style="height: 400px">
+                        @foreach (var media in Model.StoryDetail.StoryMedia)
+                        {
+                            if (media.Type != "video")
+                            {
+                                <div class="mySlides h-100">
+                                    <img class="h-100 slider-images"
+                             src="/StoryMedia/@media.Path"
+                             style="width:100%;">
+                                </div>
+                            }
+                            else
+                            {
+                                string videoId = media.Path.Replace("https://youtu.be/", "");
+                                string videoUrl = $"https://www.youtube.com/embed/{videoId}";
+                                <div class="mySlides h-100 ">
+                                    <iframe class="h-100 w-100 slider-images" src="@videoUrl"></iframe>
+                                </div>
+                            }
+                        }
+                        <!-- Next and previous buttons -->
+                        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    </div>
+
+
+
+
+                    <!-- Thumbnail images -->
+                    <div class="row mt-2 w-100 mx-auto position-relative d-flex justify-content-center" style="height: 100px">
+                        <div class="thumb-images d-flex">
+                            @{
+                                var current = 1;
+                            }
+                            @foreach (var media in Model.StoryDetail.StoryMedia)
+                            {
+                                if (media.Type != "video")
+                                {
+                                    <div class="column">
+                                        <img class="demo cursor"
+                                 src="/StoryMedia/@media.Path"
+                                 onclick="currentSlide(@current)" alt="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="column">
+                                        <img class="demo cursor" src="~/images//icons8-youtube-240.png" onclick="currentSlide(@current)"></img>
+                                    </div>
+                                }
+                                current++;
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <img class="card-img-top" id="mission-img"
+                 src="/images/no-mission-image-to-show.png"
+                 alt="Card image cap">
+            }
+        </div>
+        <div class="col-12 col-lg-6 mt-lg-0 mt-3">
+            <div class="card-body p-0">
+                <div class="d-flex justify-content-start align-items-center mt-4">
+                    <img class="thisUser me-4" src="@Model?.StoryDetail?.User.Avatar" />
+                    <p class="mb-0">@Model?.StoryDetail?.User.FirstName @Model?.StoryDetail?.User.LastName</p>
+                </div>
+                <div class="whyIVolunteer mt-4">
+                    <p class="why-i-volunteer">
+                        @Model?.StoryDetail?.User.WhyIVolunteer
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="story-content">
+        <div class="storyTitle mt-3 border-bottom">
+            <h3 class="mb-3">
+                @Model?.StoryDetail?.Title
+            </h3>
+        </div>
+        <div class="storyDesc mb-5">
+            @Html.Raw("<div class='py-4'>" + @Model?.StoryDetail?.Description + "</div>")
+        </div>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mb-5">
+        <span>
+            <a asp-controller="Admin" asp-action="ApproveStory" asp-route-storyId="@Model?.StoryDetail?.StoryId" class="btn border-0 bg-transparent story-approve-btn">
+                <i class="bi bi-check-circle text-success"></i>
+                <span>Approve</span>
+            </a>
+        </span>
+        <span class="mx-2">
+            <a asp-controller="Admin" asp-action="DeclineStory" asp-route-storyId="@Model?.StoryDetail?.StoryId" class="btn border-0 bg-transparent story-decline-btn">
+                <i class="bi bi-x-circle text-danger"></i>
+                <span>Decline</span>
+            </a>
+        </span>
+    </div>
+</div>
+
+<script src="~/js/Carousel.js"></script>

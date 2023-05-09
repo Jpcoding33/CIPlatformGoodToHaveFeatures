@@ -1,0 +1,152 @@
+input:focus, button:focus, textarea:focus{
+    box-shadow: none;
+}
+html {
+  font-size: 14px;
+}
+
+::-webkit-scrollbar {
+    height: 10px;
+    width: 0.45rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(27, 27, 27, .4);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+#navbar-toggler-btn {
+    box-shadow: none;
+}
+
+.navbar-nav .dropdown-menu {
+    position: absolute;
+}
+
+#eye-btn {
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    cursor: pointer;
+}
+
+.page-link {
+    color: #F88634;
+    border: 1px solid #F88634;
+}
+
+    .page-link:hover {
+        color: white;
+        background: #F88634;
+        cursor: pointer;
+        transition: 0.5s;
+    }
+
+
+/*    admin panel css    */
+.admin-panel{
+    background-color: #F88634;
+}
+
+.nav-link{
+    cursor: pointer;
+}
+
+/*button style input bootstrap modal*/
+
+.cancel-btn {
+    border: 1px solid gray;
+}
+
+    .cancel-btn:hover {
+        box-shadow: 0 0 5px gray;
+    }
+
+.send-mail-btn, .change-password-btn, .save-btn {
+    color: #F88634;
+    border: 1px solid #F88634;
+    background: white;
+}
+
+    .send-mail-btn:hover, .change-password-btn:hover, .save-btn:hover {
+        color: white;
+        background: #F88634;
+        transition: 0.5s;
+    }
+
+/* mission apply now button start */
+#applyNowBtn {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: max-content;
+    border: 2px solid #F88634;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+    #applyNowBtn p {
+        color: #F88634;
+    }
+
+.bi-arrow-right {
+    color: #F88634;
+}
+
+
+#applyNowBtn:hover .bi-arrow-right {
+    color: white;
+    transition: 0.5s;
+}
+
+#applyNowBtn:hover p {
+    color: white;
+    transition: 0.5s;
+}
+
+
+#applyNowBtn:hover {
+    color: white;
+    background: #F88634;
+    transition: 0.5s;
+}
+
+.form-check-input:checked{
+    background: #F88634;
+    border: 0;
+}
+
+.explore-more-mission {
+    border: 1px solid #F88634;
+    color: #F88634;
+    background: white;
+}
+
+    .explore-more-mission i {
+        color: #F88634;
+    }
+
+    .explore-more-mission:hover {
+        color: white;
+        background: #F88634;
+        transition: 0.5s;
+    }
+
+        .explore-more-mission:hover i {
+            color: white;
+            transition: 0.5s;
+        }

@@ -1,0 +1,97 @@
+﻿@model BannerDetails;
+
+@{
+    ViewData["Title"] = "AddBannerDetail";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+<style>
+    .display-banner {
+        border: 5px double #e6e6e6;
+        border-radius: 10px;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #showImg {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+<div class="container-fluid p-0">
+    <div class="border-bottom add-edit-heading">
+        <h5 class="heading">Add Banner</h5>
+    </div>
+    <div class="form">
+        <form asp-controller="Admin" asp-action="AddBanner" method="post" enctype="multipart/form-data" id="bannerForm">
+            <div class="form-content">
+                <div class="form-group">
+                    <label class="form-label" for="bannerImg">Add Banner Image</label>
+                    <input type="file" class="form-control" name="bannerImg" id="bannerImg"
+                           placeholder="Choose banner image" accept="image/jpg,image/jpeg,image/png" onchange="loadImg(this)">
+                    <span class="text-danger d-none" id="file-req">Required!</span>
+                </div>
+                <div class="form-group">
+                    <div class="display-banner mx-auto">
+                        <img src="~/images/upload-img.jpg" id="showImg" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bannerText">Banner Text</label>
+                    <textarea asp-for="Text" class="form-control" id="bannerText" rows="5"
+                              placeholder="Enter banner text"></textarea>
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="bannerSortOrder">Sort Order</label>
+                    <input type="number" asp-for="SortOrder" class="form-control" id="bannerSortOrder"
+                           placeholder="Enter sort order for banner" />
+                    <span asp-validation-for="SortOrder" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <a asp-controller="Admin" asp-action="BannerDetails" class="btn px-4 mb-5 cancel-btn rounded-pill me-4">Cancel</a>
+                <button class="btn px-4 mb-5 submit-btn rounded-pill" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#banner').addClass('active');
+    function loadImg(image) {
+        if (image.files && image.files[0]) {
+            //for(var i = 0; i < input.l0)
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#showImg').attr("src", e.target.result);
+            };
+            reader.readAsDataURL(image.files[0]);
+            $('#showImg').show();
+        }
+    }
+
+    $("#bannerImg").on("change",function () {
+        let files = $("#bannerImg")[0].files.length;
+        if (files == 0) {
+            $('#file-req').removeClass('d-none');
+        }
+        else{
+            $('#file-req').addClass('d-none');
+        }
+    });
+
+    $("#bannerForm").on("submit", function (event) {
+        let files = $("#bannerImg")[0].files.length;
+        if (files == 0) {
+            $('#file-req').removeClass('d-none');
+            event.preventDefault();
+        }
+        else{
+            $('#file-req').addClass('d-none');
+        }
+    });
+
+</script>

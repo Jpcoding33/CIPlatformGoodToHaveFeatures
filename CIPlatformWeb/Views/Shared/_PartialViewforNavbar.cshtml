@@ -1,0 +1,232 @@
+﻿<header>
+    <!-- navbar start -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid mx-2 mx-md-5">
+            <button class="navbar-toggler border-0" href="#menubar" role="button" data-bs-toggle="offcanvas"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                    id="navbar-toggler-btn">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="menubar" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body mx-lg-5">
+                    <ul class="navbar-nav d-flex">
+                        <li class="navbar-nav nav-item">
+                            <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="navbar-nav nav-item dropdown d-none" id="explore-dropdown">
+                            <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="pe-2">Explore</span>
+                                <img src="/images/drop-down.png" alt="">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                <li><a class="dropdown-item btn" onclick="loadMissions(1,'','topthemes')">Top Themes</a></li>
+                                <li><a class="dropdown-item btn" onclick="loadMissions(1,'','mostranked')">Most Ranked</a></li>
+                                <li><a class="dropdown-item btn" onclick="loadMissions(1,'','topfav')">Top Favourite</a></li>
+                                <li><a class="dropdown-item btn" onclick="loadMissions(1,'','random')">Random</a></li>
+                            </ul>
+                        </li>
+                        <li class="navbar-nav nav-item">
+                            <a class="nav-link" aria-current="page" asp-controller="Story" asp-action="StoriesPage">Stories</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (Model.UserDetail.Role == "ADMIN" || Model.UserDetail.Role == "SUPER_ADMIN")
+                            {
+                                <li class="navbar-nav nav-item">
+                                    <a class="nav-link" aria-current="page" asp-controller="Admin" asp-action="UserDetail">Admin Panel</a>
+                                </li>
+                            }
+                        }
+                        <li class="navbar-nav nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="pe-2">Policy</span>
+                                <img src="/images/drop-down.png" alt="">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                <li><a class="dropdown-item btn" asp-controller="Policy" asp-action="PolicyAndCookies">Privacy and Cookies Policy</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <ul class="navbar-nav d-flex flex-row">
+                <li class="nav-item d-flex justify-content-center align-items-center me-3">
+                    <a class="position-relative" role="button" id="" data-bs-toggle="modal" data-bs-target="#notification">
+                        <i class="bi bi-bell text-black fs-5"></i>
+                        <span class="badge rounded-pill badge-notification position-absolute" style="background: #F88634; top: -5px; right: -10px;" id="notifCount"></span>
+                    </a>
+                    <div class="modal fade" id="notification" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <button class="card-btn border-0 bg-transparent" role="button" id="" data-bs-toggle="modal" data-bs-target="#notificationSetting">
+                                            <i class="bi bi-gear-fill fs-5"></i>
+                                        </button>
+                                        <div class="modal fade" id="notificationSetting" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header d-flex justify-content-center align-items-center">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Notification Settings</h5>
+                                                    </div>
+                                                    <div class="modal-body p-0">
+                                                        <div class="p-2" style="background: #e3e3e3;">
+                                                            <p class="mb-0">Get a notification for</p>
+                                                        </div>
+                                                        <ul id="notifType">
+                                                            @*@foreach (var notiftype in Model.NotificationTypeList)
+                                                            {
+                                                            <li class="form-check mb-2 d-flex align-items-center">
+                                                            <input class="form-check-input" type="checkbox" value="@notiftype.NottypeId" style="float: right">
+                                                            <label class="form-check-label ms-2" for="">@notiftype.NotifType</label>
+                                                            </li>
+                                                            }*@
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn cancel-btn rounded-pill" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn save-btn rounded-pill" data-bs-dismiss="modal">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0">Notifications</h4>
+                                    </div>
+                                    <div>
+                                        <button class="border-0 bg-transparent" role="button"><p class="mb-0">Clear all</p></button>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="my-4">
+                                        <table class="table table-borderless w-100" id="notifList">
+                                            @*@foreach (var notiftoall in Model.NotificationToAllList)
+                                            {
+                                            <tr class="border-1 d-flex align-items-center">
+                                            <td><i class="bi bi-plus-circle fs-5"></i></td>
+                                            <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
+                                            <td class="text-end" id="markAsReadIcon">
+                                            @if (notiftoall.Isread == 0){
+                                            <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
+                                            <i class="bi bi-check-circle-fill fs-5" style="color: #F88634;"></i>
+                                            </button>
+                                            }
+                                            else{
+                                            <i class="bi bi-check-circle-fill fs-5" style="color: #e3e3e3;"></i>
+                                            }
+                                            </td>
+                                            </tr>
+                                            }*@
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn cancel-btn rounded-pill" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (Model.UserDetail != null)
+                        {
+                            <a class="nav-link" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false" style="width:auto">
+                                <img src="@Model.UserDetail.Avatar" class="rounded-circle" height="35" width="35" alt="Profile pic"
+                             loading="lazy" />
+                                <span class="px-2">@Model.UserDetail.FirstName @Model.UserDetail.LastName</span>
+                                <img src="/images/drop-down.png" alt="">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                <li><a class="dropdown-item btn" asp-controller="User" asp-action="Profile">My Profile</a></li>
+                                <li><a class="dropdown-item btn" asp-controller="User" asp-action="VolTimeSheet">Volunteering Timesheet</a></li>
+                                <li><a class="dropdown-item btn" asp-controller="User" asp-action="Logout">Logout</a></li>
+                            </ul>
+                        }
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav d-flex flex-row">
+                            <li><a class="dropdown-item btn" asp-controller="Accounts" asp-action="Login">Login</a></li>
+                            <li><a class="dropdown-item btn" asp-controller="Accounts" asp-action="Registration">Register</a></li>
+                        </ul>
+                    }
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- navbar end -->
+</header>
+
+<script type="text/javascript">
+    if ($(location).attr('href') == 'https://localhost:44348/') {
+        $('#explore-dropdown').removeClass('d-none');
+    }
+    else {
+        $('#explore-dropdown').addClass('d-none');
+    }
+
+    function isRead(NotallId) {
+        if (NotallId > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '/Common/MarkNotAsRead',
+                data: { "notId": NotallId },
+                success: function () {
+                    $("#markAsReadIcon").load(location.href + " #markAsReadIcon");
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Common/GetNotifData',
+            success: function (data) {
+                console.log(data);
+                $('#notifCount').text(data.notificationCount);
+                $.each(data.notificationTypeList, function (index, notifType) {
+
+                    $('#notifType').append(`<li class="form-check mb-2 d-flex align-items-center">
+                                                    <input class="form-check-input" type="checkbox" value="`+ notifType.nottypeId + `" style="float: right">
+                                                    <label class="form-check-label ms-2" for="">`+ notifType.notifType + `</label>
+                                            </li>
+                             `);
+                });
+                $.each(data.notificationToAllList, function (index, notifdata) {
+                    $('#notifList').append(`<tr class="border-1 d-flex align-items-center">
+                                                    <td><i class="bi bi-plus-circle fs-5"></i></td>
+                                                        <td><a href="`+ notifdata.url + `" class="text-decoration-none text-black"><small>` + notifdata.notification + `</small></a></td>
+                                                    <td class="text-end" id="markAsReadIcon"></td>
+                                            </tr>
+                                     `);
+                    if (notifdata.isread == 0) {
+                        $('#markAsReadIcon').append(`<button class="border-0 bg-transparent" onclick="isRead(` + notifdata.notallId + `)">
+                                                        <i class="bi bi-check-circle-fill fs-5" style="color: #F88634;"></i>
+                                                         </button>`);
+                    }
+                    else {
+                        $('#markAsReadIcon').append(`<i class="bi bi-check-circle-fill fs-5" style="color: #e3e3e3;"></i>`);
+                    }
+                });
+            },
+            error: function () {
+                console.log('error');
+            },
+        });
+    });
+</script>

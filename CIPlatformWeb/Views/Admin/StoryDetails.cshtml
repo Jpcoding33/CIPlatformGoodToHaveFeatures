@@ -1,0 +1,100 @@
+﻿@model StoryDetails;
+
+@{
+    ViewData["Title"] = "StoryDetail";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+<style type="text/css">
+    .view-btn{
+        border: 1px solid #F88634;
+        color: #F88634;
+        padding: 0px 10px;
+    }
+
+    .view-btn:hover {
+        color: white;
+        background-color: #F88634;
+    }
+</style>
+
+
+<div class="container-fluid p-0">
+    <div class="border-bottom">
+        <h1 class="heading">Story</h1>
+    </div>
+    <div class="mt-5 mb-4">
+        <div class="input-group rounded position-relative search-bar">
+            <input type="search" class="form-control rounded" placeholder="Search" id="search-bar" />
+            <span class="search-icon"><i class="bi bi-search"></i></span>
+        </div>
+    </div>
+    <div class="table-div">
+        <table id="userTable" class="table">
+            <thead>
+                <tr>
+                    <th>Story Title</th>
+                    <th>User Name</th>
+                    <th>Mission Title</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.StoryLists)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.User.FirstName @item.User.LastName</td>
+                        <td>@item.Mission.Title</td>
+                        <td class="d-flex justify-content-center align-items-center">
+                            <small class="mx-2">
+                                <a asp-controller="Admin" asp-action="ViewStory" asp-route-storyId="@item.StoryId" class="btn rounded-pill view-btn">
+                                    <small>View</small>
+                                </a>
+                            </small class="mx-2">
+                            <span>
+                                <a asp-controller="Admin" asp-action="ApproveStory" asp-route-storyId="@item.StoryId" class="btn border-0 bg-transparent approve-btn">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                </a>
+                            </span>
+                            <span class="mx-2">
+                                <a asp-controller="Admin" asp-action="DeclineStory" asp-route-storyId="@item.StoryId" class="btn border-0 bg-transparent decline-btn">
+                                    <i class="bi bi-x-circle text-danger"></i>
+                                </a>
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+ <script type="text/javascript">
+    $(document).ready(function () {
+        var dataTable = $('#userTable').DataTable({
+            "pageLength": 5,
+            pagingType: 'full_numbers',
+            oLanguage: {
+                oPaginate:
+                {
+                    sNext: '<i class="bi bi-chevron-right"></i>',
+                    sPrevious: '<i class="bi bi-chevron-left"></i>',
+
+                }
+            },
+            "language": {
+                "paginate": {
+                    "last": '<i class="bi bi-chevron-double-right"></i>',
+                    "first": '<i class="bi bi-chevron-double-left"></i>'
+                }
+            }
+        });
+        $('#search-bar').keyup(function () {
+            dataTable.search(this.value).draw();
+        });
+    });
+    $('#story').addClass('active');
+</script>
+<script src="~/js/Carousel.js"></script>

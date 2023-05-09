@@ -1,0 +1,229 @@
+/* mission info */
+
+/* add to fav and recommend to friend btns  */
+
+.add-to-fav,
+.recommen-to-co {
+    height: 50px;
+    border: 1px solid grey;
+    border-radius: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+    .add-to-fav:hover,
+    .recommen-to-co:hover {
+        box-shadow: 0 0 5px gray;
+    }
+
+
+/*loader for sending mail*/
+#volPageLoader {
+    height: 50vh;
+}
+
+    #volPageLoader div {
+        width: 3rem;
+        height: 3rem;
+        margin-top: 15%;
+    }
+
+/*image style color-profile recommended user*/
+.user-list {
+    display: flex;
+    align-items: center;
+}
+
+.rec-user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 30%;
+}
+
+/* tabs section */
+.download-file-btn {
+    border: 1px solid gray;
+    border-radius: 20px;
+}
+
+    .download-file-btn:hover {
+        box-shadow: 0 0 5px gray;
+    }
+
+#comment-text-area {
+    height: 100px;
+}
+
+#volunteer-comments-section {
+    height: auto;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.user-comment-img {
+    width: 95px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+/* recent volunteering section  */
+.volunteer-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+/* recent volunteer pagination style */
+#noOfVolunteer {
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+}
+
+
+#mission-img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.card-btn {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+}
+
+.card-body p {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding: 0 1rem;
+}
+
+#location {
+    position: absolute;
+    top: 1rem;
+    right: 10px;
+    border-radius: 20px;
+}
+
+#likeThisMission {
+    position: absolute;
+    bottom: 65px;
+    right: 10px;
+}
+
+#shareToFriend {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+#missionTheme {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    background-color: white;
+}
+
+#ratings {
+    width: max-content;
+    background-color: white;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.rating-star {
+    width: 20px;
+    height: 20px;
+}
+
+#missionPeriod {
+    position: absolute;
+    top: -15px;
+    background-color: white;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    border-radius: 20px;
+}
+
+#applyNowBtn, #miss-closed-btn, #miss-app-pending, #miss-approved {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: max-content;
+    border-radius: 20px;
+}
+
+#miss-closed-btn, #miss-app-pending, #miss-approved {
+    background: #F88634;
+    color: white;
+    opacity: 0.9;
+    cursor: default;
+}
+
+.card {
+    height: 97%;
+    margin-bottom: 3%;
+}
+
+@media (max-width: 576px) {
+    #mission-info {
+        margin: 0 10px;
+    }
+}
+
+.modal-content {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.modal-body {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.post-comment-btn {
+    color: #F88634;
+    border: 1px solid #F88634;
+    background: white;
+}
+
+    .post-comment-btn:hover {
+        color: white;
+        background: #F88634;
+        transition: 0.5s;
+    }
+
+/*approval status*/
+#ApprovalStatus {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    background-color: white;
+    padding: 2px 10px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+.card-title-rel, .rel-miss-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.titleForClosedRelMiss, .descForClosedRelMiss {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (min-width: 450px) {
+    .rel-miss-con {
+        padding: 0 5%;
+    }
+}

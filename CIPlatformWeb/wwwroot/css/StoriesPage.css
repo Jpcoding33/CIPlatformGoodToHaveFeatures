@@ -1,0 +1,89 @@
+/* share story and listing page start */
+#shareStorySecImg {
+    background: url('/images/Grow-Trees-On-the-path-to-environment-sustainability-login.png');
+    height: 350px;
+    background-size: cover;
+    background-position-y: 40%;
+    background-repeat: no-repeat;
+}
+
+.active{
+    background: #F88634;
+    color: white;
+}
+
+#shareStory {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#shareStoryBtn {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: max-content;
+    border: 2px solid white;
+    border-radius: 30px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.card-image-part:hover .overlay {
+    opacity: 1;
+}
+
+#view-details-Btn {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    width: max-content;
+    border: 2px solid white;
+    border-radius: 30px;
+}
+
+.card{
+    height: 94%;
+    margin-bottom: 4%;
+}
+
+.card-title, .story-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+.card-pill {
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    background-color: white;
+    border-radius: 20px;
+    border: 1px solid #e3e3e3;
+}
+
+.volunteer-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+p{
+    margin:0;
+}
+
+/* share story and listing page end */

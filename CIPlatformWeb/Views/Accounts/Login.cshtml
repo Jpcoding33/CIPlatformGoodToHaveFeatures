@@ -1,0 +1,83 @@
+﻿@model LoginViewModel;
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LayoutAccounts.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="carousel" class="col-lg-8">
+            <div id="carouselExampleCaptions" class="carousel slide">
+                <div class="carousel-indicators">
+                    @for(int i = 0; i < Model.BannerList.Count(); i++)
+                    { 
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@i"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                    }
+                </div>
+                <div class="carousel-inner">
+                    @foreach(var banner in Model.BannerList)
+                    {
+                        <div class="carousel-item @(banner == Model.BannerList.First()? "active":"")">
+                            <img src="@banner.Image"
+                             class="d-block w-100" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                                <p>
+                                    @banner.Text
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="form" class="col-lg-4 px-5 my-auto">
+            <div class="row w-100 mt-5">
+                <form asp-controller="Accounts" asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email address</label>
+                        <input asp-for="Email" type="email" class="form-control" id="email"
+                               aria-describedby="emailHelp" placeholder="evan.donohue@gmail.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <div class="position-relative" id="show_hide_password1">
+                            <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Enter password">
+                            <div class="position-absolute" id="eye-btn">
+                                <a><i class="bi bi-eye-fill" aria-hidden="true"></i></a>
+                            </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 col-12 mx-auto">
+                        <button id="login-btn" class="btn" type="submit">Login</button>
+                    </div>
+                    <div id="lost-password" class="text-center mt-4">
+                        <a asp-controller="Accounts" asp-action="Forgot_Password" id="forgotpassword">
+                            <p>Lost your password?</p>
+                        </a>
+                        <p>Don’t have an account? <a asp-controller="Accounts" asp-action="Registration" id="signup">Create an account</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <div id="privacy-policy" class="row text-center mt-5">
+                <a asp-controller="Policy" asp-action="PolicyAndCookies" class="mt-5 pt-4 text-black">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*script for ShowHidePassword*@
+<script src="/js/ShowHidePassword.js"></script>

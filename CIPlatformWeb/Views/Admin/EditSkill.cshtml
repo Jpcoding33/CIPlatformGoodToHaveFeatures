@@ -1,0 +1,43 @@
+﻿@model SkillDetails;
+
+@{
+    ViewData["Title"] = "EditSkillDetail";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+
+<div class="container-fluid p-0">
+    <div class="border-bottom add-edit-heading">
+        <h5 class="heading">Edit Skill</h5>
+    </div>
+    <div class="form">
+        <form asp-controller="Admin" asp-action="EditSkill" method="post">
+            <div class="form-content">
+                <div hidden>
+                    <input asp-for="SkillId" type="text" class="form-control" id="skillId">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="title">Skill Name</label>
+                    <input asp-for="SkillName" type="text" class="form-control" id="title"
+                           placeholder="Enter skill name">
+                    <span class="text-danger" asp-validation-for="SkillName"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="status">Select Status</label>
+                    <select asp-for="Status" class="form-select select" id="status">
+                        <option value="1">Active</option>
+                        <option value="0">In-Active</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <a asp-controller="Admin" asp-action="SkillDetails" class="btn px-4 mb-5 cancel-btn rounded-pill me-4">Cancel</a>
+                <button class="btn px-4 mb-5 submit-btn rounded-pill" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#skill').addClass('active');
+</script>

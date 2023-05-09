@@ -1,0 +1,109 @@
+﻿@model CMSPageDetails;
+
+@{
+    ViewData["Title"] = "EditCMSDetail";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+
+<div class="container-fluid p-0">
+    <div class="border-bottom add-edit-heading">
+        <h5 class="heading">Edit CMS</h5>
+    </div>
+    <div class="form">
+        <form asp-controller="Admin" asp-action="EditCMS" method="post" id="cmsPageForm">
+            <div class="form-content">
+                <div hidden>
+                    <input asp-for="CmsPageId" type="text" class="form-control" id="cmsId">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="title">Title</label>
+                    <input asp-for="Title" type="text" class="form-control" id="title"
+                           placeholder="Enter title">
+                    <span class="text-danger" asp-validation-for="Title"></span>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1" for="description">Description</label>
+                    <textarea asp-for="Description" class="w-100 hidden-by-tinymce" style="min-height: 300px" id="description"></textarea>
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <p class="text-danger d-none" id="desc-req">Required!</p>
+                        <p id="" class="ps-3"><span id="character_count"></span>/1000</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="slug">Slug</label>
+                    <input asp-for="Slug" type="text" class="form-control" id="slug"
+                           placeholder="Enter slug">
+                    <span class="text-danger" asp-validation-for="Slug"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="status">Select Status</label>
+                    <select asp-for="Status" class="form-select select" id="status">
+                        <option value="1">Active</option>
+                        <option value="0">In-Active</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <a asp-controller="Admin" asp-action="CMSPage" class="btn px-4 mb-5 cancel-btn rounded-pill me-4">Cancel</a>
+                <button class="btn px-4 mb-5 submit-btn rounded-pill" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
+<script type="text/javascript">
+    $('#cms').addClass('active');
+    tinymce.init({
+        selector: 'textarea#description',
+        plugins: 'preview importcss autosave save directionality fullscreen pagebreak nonbreaking anchor lists wordcount help emoticons',
+        menubar: false,
+        statusbar: false,
+        toolbar: 'undo redo | bold italic strikethrough | alignleft aligncenter alignright alignjustify | superscript subscript removeformat',
+        autosave_ask_before_unload: true,
+        autosave_interval: "30s",
+        autosave_prefix: "{path}{query}-{id}-",
+        autosave_restore_when_empty: false,
+        autosave_retention: "2m",
+        content_css: '//www.tiny.cloud/css/codepen.min.css',
+        importcss_append: true,
+        height: 300,
+        toolbar_mode: 'sliding',
+        setup: function (ed) {
+            //On change call
+            ed.on('change', function (e) {
+                //Validate tinyMCE on text change
+                tinyMCE.triggerSave();
+
+                $("#" + ed.id).valid();
+
+
+            }
+            );
+        },
+        setup: function (ed) {
+            ed.on('keyUp', function (e) {
+                var max = 1000;
+                var count = CountCharacters();
+                if (count >= max) {
+                    if (e.keyCode != 8 && e.keyCode != 46)
+                        tinymce.dom.Event.cancel(e);
+                    document.getElementById("character_count").innerHTML = "Maximun allowed character is: 1000";
+
+                } else {
+                    document.getElementById("character_count").innerHTML = count;
+                }
+            });
+        }
+    });
+
+    function CountCharacters() {
+        var body = tinymce.get("description").getBody();
+        var content = tinymce.trim(body.innerText || body.textContent);
+        return content.length;
+    };
+    
+</script>

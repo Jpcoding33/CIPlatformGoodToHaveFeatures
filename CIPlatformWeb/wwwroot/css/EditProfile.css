@@ -1,0 +1,117 @@
+﻿.profile-div {
+    height: 20%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#profileImage {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+
+@media (max-width: 991px) {
+    .profile-div {
+        height: 270px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .profile-div p {
+            margin-right: 20px;
+    }
+    .list-arrows {
+        flex-direction: row !important;
+    }
+    .list-arrows a{
+        margin: 20px;
+    }
+}
+
+.dual-list .list-group {
+    margin-top: 8px;
+    max-height: 40vh;
+    overflow-y: scroll;
+}
+
+.list-left li, .list-right li {
+    cursor: pointer;
+}
+
+.list-arrows {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+    .list-arrows a {
+        margin-bottom: 20px;
+    }
+
+.active-skill {
+    background: #cfd0d1;
+}
+
+.modal-body {
+    max-height: 80vh;
+    overflow-x: hidden;
+    text-align: left;
+}
+
+.search-icon{
+    right: 0;
+    z-index: 1000;
+}
+
+
+.modal-dialog-scrollable .modal-content {
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+#edit-pic-icon {
+    width: 30px;
+    height: 30px;
+    bottom: 2px;
+    right: 10px;
+    background: #f1cf15;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+}
+
+#profileDiv {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    border-radius: 50%;
+}
+
+/*upload avatar button*/
+.upload-avatar{
+    color: #F88634;
+    background: white;
+    border: 1px solid #F88634;
+}
+
+.upload-avatar:hover{
+    color: white;
+    background: #F88634;
+    transition: 0.5s;
+}
+
+.add-skills-btn{
+    border: 1px solid gray;
+}
+.add-skills-btn:hover {
+    box-shadow: 0 0 5px gray;
+}

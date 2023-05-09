@@ -1,0 +1,155 @@
+﻿@model RegistrationViewModel;
+@{
+    ViewData["Title"] = "Registration";
+    Layout = "~/Views/Shared/_LayoutAccounts.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="carousel" class="col-lg-8">
+            <div id="carouselExampleCaptions" class="carousel slide">
+                <div class="carousel-indicators">
+                    @for (int i = 0; i < Model.BannerList.Count(); i++)
+                    {
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@i"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                    }
+                </div>
+                <div class="carousel-inner">
+                    @foreach (var banner in Model.BannerList)
+                    {
+                        <div class="carousel-item @(banner == Model.BannerList.First()? "active":"")">
+                            <img src="@banner.Image"
+                             class="d-block w-100" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                                <p>
+                                    @banner.Text
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="regisForm" class="col-lg-4 px-5 my-auto">
+            <div class="row mt-4">
+                <form asp-controller="Accounts" asp-action="Registration" method="post">
+                    <div class="mb-3">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input asp-for="FirstName" type="text" class="form-control" id="first-name"
+                               aria-describedby="emailHelp" placeholder="Enter your first-name">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input asp-for="LastName" type="text" class="form-control" id="last-name"
+                               aria-describedby="emailHelp" placeholder="Enter your last-name">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Number</label>
+                        <input asp-for="PhoneNumber" type="text" class="form-control" id="number"
+                               aria-describedby="emailHelp" placeholder="9876543210">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <select asp-for="CountryId" class="form-select select" id="regis-cascade">
+                            <option value="">Select Country</option>
+                            @foreach (var country in Model.CountryList)
+                            {
+                                <option value="@country.CountryId">@country.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CountryId" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <select asp-for="CityId" class="form-select select" id="cascade-reg-city">
+                            <option value="">Please Select Country First</option>
+                        </select>
+                        <span asp-validation-for="CityId" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email address</label>
+                        <input asp-for="Email" type="email" class="form-control" id="email"
+                               aria-describedby="emailHelp" placeholder="evan.donohue@gmail.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <div class="position-relative" id="show_hide_password1">
+                            <input asp-for="Password" type="password" class="form-control" id="txtPassword" placeholder="Enter password">
+                            <div class="position-absolute" id="eye-btn">
+                                <a><i class="bi bi-eye-fill" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <div class="position-relative" id="show_hide_password2">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="txtConfirmPassword" placeholder="Enter password again">
+                            <div class="position-absolute" id="eye-btn">
+                                <a><i class="bi bi-eye-fill" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="d-grid gap-2 col-12 mx-auto">
+                        <button id="register-btn" class="btn" type="submit">Register</button>
+                    </div>
+                    <div id="lost-password" class="text-center mt-4">
+                        <a asp-controller="Accounts" asp-action="Forgot_Password" id="forgotpassword">
+                            <p>Lost your password?</p>
+                        </a>
+                        <p>Already registered? <a asp-controller="Accounts" asp-action="Login" id="signup">Login now</a></p>
+                    </div>
+                    <input name="__RequestVerificationToken" type="hidden" value="<removed for brevity>">
+                </form>
+            </div>
+
+            <div id="privacy-policy" class="row text-center mb-5">
+                <a asp-controller="Policy" asp-action="PolicyAndCookies" class="mt-5 pt-4 text-black">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*script for ShowHidePassword*@
+<script src="/js/ShowHidePassword.js"></script>
+<script type="text/javascript">
+    $('#regis-cascade').change(function () {
+        var countryId = $('#regis-cascade').val();
+        console.log(countryId);
+        cityRegCascade(countryId);
+    });
+    function cityRegCascade(cId) {
+        $.ajax({
+            type: 'POST',
+            url: '/Accounts/RegCascadeCity',
+            data: { "countryId": cId },
+            success: function (data) {
+                $('#cascade-reg-city').empty();
+                $('#cascade-reg-city').append('<option value="">Select City</option>');
+                $.each(data, function (i, city) {
+                    $('#cascade-reg-city').append('<option value=' + city.cityId + '>' + city.name + '</option>');
+                });
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+</script>

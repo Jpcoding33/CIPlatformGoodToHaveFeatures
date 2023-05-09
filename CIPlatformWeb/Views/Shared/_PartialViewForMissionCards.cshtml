@@ -1,0 +1,593 @@
+﻿@model LandingPageViewModel;
+@{
+
+    PaginationViewModel pager = new PaginationViewModel();
+
+    int pageNo = 0;
+    int count = ViewBag.missionCount;
+    if (ViewBag.userPager != null)
+    {
+        pager = ViewBag.userPager;
+        pageNo = pager.CurrentPage;
+    }
+}
+<style>
+    .active {
+        background: #F88634;
+        color: white;
+    }
+
+    .card-img {
+        height: 250px;
+    }
+</style>
+
+<!-- mission heading and listing start -->
+<div class="container-fluid py-md-5 py-3 mb-5">
+    @{
+        <!-- mission heading and icons start -->
+        <div class="d-flex justify-content-between align-items-center container-fluid mb-4" id="missionBar" style="padding: 0 5%">
+            <div id="missionBarLeft">
+                <p class="mb-0 h2">Explore <strong>@count Missions</strong></p>
+            </div>
+            <div class="d-flex align-items-center ms-auto nav d-none d-md-flex" id="missionBarRight">
+                <div class="nav-item dropdown" id="sortByFilter">
+                    <a class="px-3 py-1 border text-decoration-none d-flex justify-content-between align-items-center"
+                       href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false" style="width: 150px; display: block;">
+                        <span>Sort By</span>
+                        <img src="/images/drop-down.png" alt="">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item btn" onclick="loadMissions(1,'new')">Newest</a></li>
+                        <li><a class="dropdown-item btn" onclick="loadMissions(1,'old')">Oldest</a></li>
+                        <li><a class="dropdown-item btn" onclick="loadMissions(1,'low')">Lowest available seats</a></li>
+                        <li><a class="dropdown-item btn" onclick="loadMissions(1,'high')">Highest available seats</a></li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li><a class="dropdown-item btn" onclick="loadMissions(1,'fav')">Sort by my favourite</a></li>
+                        }
+                        <li><a class="dropdown-item btn" onclick="loadMissions(1,'deadline')">Sort by deadline</a></li>
+                    </ul>
+                </div>
+                <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
+                    <img src="/images/grid.png" alt="" height="25">
+                </button>
+                <button class="mx-4 d-flex align-items-center justify-content-center border-0 btn-list" id="listView">
+                    <img src="/images/list.png" alt="" height="18">
+                </button>
+            </div>
+        </div>
+        <!-- mission heading and icons end -->
+        if (count > 0)
+        {
+            <!-- missions gridview and listview start -->
+            <div class="container-fluid grid-container" style="padding: 0 5%">
+                <div class="row">
+                    @foreach (Mission item in Model.MissionList)
+                    {
+
+                        var goalMission = @Model?.TotalGoalList?.Where(data => data.MissionId == item.MissionId).FirstOrDefault();
+                        int? goalValue = null;
+                        int? achievedValue = 0;
+                        if (goalMission != null)
+                        {
+                            goalValue = goalMission?.GoalValue;
+                            achievedValue = goalMission?.AchievedValue;
+                        }
+                        bool missionIsClosed = false;
+                        @if (item.MissionDeadline < DateTime.Now || achievedValue >= goalValue)
+                        {
+                            missionIsClosed = true;
+                        }
+                        //var to store if user has applied for this mission ot not
+                        var thisMissApp = Model?.MissionApplicationList?.Where(m => m.UserId == Model?.UserDetail?.UserId && m.MissionId == item.MissionId).FirstOrDefault();
+
+                        <div class="col-12 col-md-6 col-lg-4 mission-card">
+                            <div class="card mb-4">
+                                <div class="card-img" style="position: relative;">
+                                    @{
+                                        var image = item.MissionMedia.FirstOrDefault(media => media.MediaType != "video");
+                                    }
+                                    @if (image != null)
+                                    {
+                                        <img class="card-img-top" id="mission-img"
+                                 src="/MissionMedia/@image?.MediaPath"
+                                 alt="Card image cap">
+                                    }
+                                    else
+                                    {
+                                        <img class="card-img-top" id="mission-img"
+                                 src="/images/no-mission-image-to-show.png"
+                                 alt="Card image cap">
+                                    }
+                                    @if (missionIsClosed)
+                                    {
+                                        <div class="d-flex bg-info" id="ApprovalStatus">
+                                            <strong class="mb-0 me-2 text-white">Closed</strong>
+                                            <i class="bi bi-patch-check text-white"></i>
+                                        </div>
+                                    }
+                                    else if (@thisMissApp != null && thisMissApp?.ApprovalStatus == "APPROVED")
+                                    {
+                                        <div class="d-flex bg-success" id="ApprovalStatus">
+                                            <strong class="mb-0 me-2 text-white">Approved</strong>
+                                            <i class="bi bi-patch-check text-white"></i>
+                                        </div>
+                                    }
+                                    else if (@thisMissApp != null && thisMissApp?.ApprovalStatus == "PENDING")
+                                    {
+                                        <div class="d-flex bg-warning" id="ApprovalStatus">
+                                            <strong class="mb-0 me-2 text-white">Pending</strong>
+                                            <i class="bi bi-patch-check text-white"></i>
+                                        </div>
+                                    }
+
+                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                 id="location" style="width: 7rem">
+                                        <i class="bi bi-geo-alt ms-auto pe-2 text-white fs-5"></i>
+                                        <p class="text-light me-auto mb-0" id="locationName">@item.City.Name</p>
+                                    </div>
+
+                                    @*add to fav*@
+                                    @if (Model?.UserDetail != null)
+                                    {
+                                        <button onclick="addToFav(@item.MissionId,@pager.CurrentPage,1)" class="card-btn" id="likeThisMission">
+                                            @if (Model?.FavMissionList?.Where(m => m.UserId == Model.UserDetail.UserId && m.MissionId == item.MissionId).Count() == 1)
+                                            {
+                                                <i class="bi bi-heart-fill text-danger fs-5" id="like"></i>
+                                            }
+
+                                            else
+                                            {
+                                                <i class="bi bi-heart fs-5"></i>
+                                            }
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="card-btn" id="likeThisMission" onclick="Alert('Please Login First!')">
+                                            <i class="bi bi-heart fs-5"></i>
+                                        </button>
+                                    }
+
+                                    @*recommend to a user*@
+                                    @if (Model?.UserDetail != null)
+                                    {
+                                        if (!missionIsClosed)
+                                        {
+                                            <button class="card-btn" id="shareToFriend" data-bs-toggle="modal" data-bs-target="#share-to-frnd">
+                                                <i class="bi bi-people-fill fs-5"></i>
+                                            </button>
+                                            <div class="modal fade" id="share-to-frnd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                    <div class="modal-content">
+                                                        <div id="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                @foreach (User userList in Model.UsersList)
+                                                                {
+                                                                    <div class="form-check my-4 user-list">
+                                                                        <input class="form-check-input checkbox ms-2 me-4" type="checkbox" id="@userList.UserId">
+                                                                        <img class="rec-user-img me-2" src="@userList.Avatar" alt="">
+                                                                        <label class="form-check-label" for="">@userList.FirstName @userList.LastName</label>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn cancel-btn rounded-pill" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn send-mail-btn rounded-pill" onclick="sendMail(@item.MissionId)">Send Mail</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-none w-100 text-center" id="volPageLoader">
+                                                            <div class="spinner-border text-warning" role="status">
+                                                            </div>
+                                                            <p>Sending Mail...</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <button class="card-btn" id="shareToFriend" onclick="missionClosedAlert('Opps! Mission Was Closed.')">
+                                                <i class="bi bi-people-fill fs-5"></i>
+                                            </button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button class="card-btn" id="shareToFriend" onclick="Alert('Please Login First!')">
+                                            <i class="bi bi-people-fill fs-5"></i>
+                                        </button>
+                                    }
+
+                                    <div>
+                                        <p class="d-inline px-2" id="missionTheme">@item.MissionTheme.Title</p>
+                                    </div>
+                                </div>
+                                <div class="card-body grid-card-view p-0 d-flex flex-column justify-content-between">
+                                    @if (missionIsClosed)
+                                    {
+                                        <h5 class=" mt-3 px-3 titleForClosedMiss">@item.Title</h5>
+                                        <p class="card-text px-3 descForClosedMiss">
+                                            @item.ShortDescription
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="card-title mt-3 px-3">@item.Title</h5>
+                                        <p class="card-text px-3 miss-desc">
+                                            @item.ShortDescription
+                                        </p>
+                                    }
+                                    <div class="d-flex justify-content-between px-3">
+                                        <div>
+                                            <p>@item.OrganizationName</p>
+                                        </div>
+                                        <div>
+                                            @*mission ratings*@
+                                            @{
+                                                var missionRatingCount = Model?.MissionRatings?.Where(m => m.MissionId == item.MissionId).ToList();
+                                            }
+                                            @if (missionRatingCount?.Count() > 0)
+                                            {
+                                                var avg = (int)missionRatingCount.Average(m => m.Rating);
+                                                for (int i = 1; i <= avg; i++)
+                                                {
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                }
+                                                for (int i = avg + 1; i <= 5; i++)
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (!missionIsClosed)
+                                    {
+
+                                        @if (item.MissionType == "Time")
+                                        {
+                                            var totalVolForTimeMiss = Model?.MissionApplicationList?.Count(missionApp => missionApp.MissionId == item.MissionId && missionApp.Mission.MissionType == "Time" && missionApp.ApprovalStatus == "APPROVED");
+                                            var seatsLeft = item.TotalSeats - totalVolForTimeMiss;
+
+                                            <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                                <div class="border text-center px-3" id="missionPeriod">
+                                                    <small>From&nbsp;<span>@item?.StartDate.Value.ToShortDateString()</span>&nbsp;until&nbsp;<span>@item?.EndDate.Value.ToShortDateString()</span></small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                                        <div>
+                                                            <p class="mb-0">@seatsLeft</p>
+                                                            <small>Seats Left</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                                        <div>
+                                                            <p class="mb-0">@item?.MissionDeadline.Value.ToShortDateString()</p>
+                                                            <small>Deadline</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        else if (item.MissionType == "Goal")
+                                        {
+                                            decimal? progressBarVal = ((decimal)achievedValue / (decimal)goalValue) * 100;
+                                            var totalVolForGoalMiss = Model?.MissionApplicationList?.Count(missionApp => missionApp.MissionId == item.MissionId && missionApp.Mission.MissionType == "Goal" && missionApp.ApprovalStatus == "APPROVED");
+
+                                            <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                                <div class="border text-center px-3" id="missionPeriod">
+                                                    <small>@goalMission?.GoalObjectiveText</small>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                                        <div>
+                                                            <p class="mb-0">@totalVolForGoalMiss</p>
+                                                            <small>Volunteered</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <img class="me-2" height="25" src="/images/achieved.png" alt="">
+                                                        <div>
+                                                            <div class="progress" style="width: 100px; height: 15px;">
+                                                                <div class="progress-bar" role="progressbar" style="width: @progressBarVal%; background: #F88634;"
+                                                     aria-valuenow="@progressBarVal" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                            @if (@achievedValue >= @goalValue)
+                                                            {
+                                                                <small>Fully Achieved</small>
+                                                            }
+                                                            else
+                                                            {
+                                                                <small><span>@achievedValue</span> achieved</small>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    @if (missionIsClosed)
+                                    {
+                                        <div class="border-top">
+                                            <a asp-controller="VolPage" asp-action="VolunteeringMissionPage" asp-route-id="@item?.MissionId"
+                               class="btn d-flex align-items-center justify-content-center mx-auto my-4"
+                               id="applyNowBtn">
+                                                <p class="view-details mb-0 pe-4 h6">View Details</p>
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            <a asp-controller="VolPage" asp-action="VolunteeringMissionPage" asp-route-id="@item?.MissionId"
+                               class="btn d-flex align-items-center justify-content-center mx-auto my-4"
+                               id="applyNowBtn">
+                                                <p class="view-details mb-0 pe-4 h6">Apply Now</p>
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+
+                                    }
+                                </div>
+                                <div class="card-body d-none list-card-view p-0 d-flex flex-column justify-content-between">
+                                    <div class="d-flex justify-content-between flex-wrap pt-4 pb-2 px-2">
+                                        <div class="d-flex">
+                                            <div class="d-flex justify-content-center align-items-center px-3">
+                                                <i class="bi bi-geo-alt pe-1"></i>
+                                                <small>@item?.City.Name</small>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center px-3">
+                                                <i class="bi bi-globe2 pe-1"></i>
+                                                <small>@item?.MissionTheme.Title</small>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center px-3">
+                                                <i class="bi bi-people pe-1"></i>
+                                                <small>@item?.OrganizationName</small>
+                                            </div>
+                                        </div>
+                                        <div class="px-3">
+                                            @*mission ratings*@
+                                            @{
+                                                var missionRating = Model?.MissionRatings?.Where(m => m.MissionId == item?.MissionId).ToList();
+                                            }
+                                            @if (missionRating?.Count() > 0)
+                                            {
+                                                var avg = (int)missionRating.Average(m => m.Rating);
+                                                for (int i = 1; i <= avg; i++)
+                                                {
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                }
+                                                for (int i = avg + 1; i <= 5; i++)
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <h5 class="card-title mt-3 px-3">@item.Title</h5>
+                                        <p class="card-text px-3 miss-desc">
+                                            @item.ShortDescription
+                                        </p>
+                                    </div>
+
+                                    @if (item.MissionType == "Time")
+                                    {
+                                        var totalVolForTimeMiss = Model?.MissionApplicationList?.Count(missionApp => missionApp.MissionId == item.MissionId && missionApp.Mission.MissionType == "Time" && missionApp.ApprovalStatus == "APPROVED");
+                                        var seatsLeft = item.TotalSeats - totalVolForTimeMiss;
+                                        <div class="px-3">
+                                            @if (item.MissionSkills.Count() > 0)
+                                            {
+                                                <i class="bi bi-tools pe-2"><p class="px-2 mb-0 d-inline">Skills</p></i>
+                                                <div class="d-flex justify-content-start flex-wrap align-items-center">
+                                                    @foreach (var missSkills in item.MissionSkills)
+                                                    {
+                                                        <small>@missSkills.Skill.SkillName,&nbsp;&nbsp;&nbsp;</small>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                            <div class="border text-center px-3" id="missionPeriod">
+                                                <small>From&nbsp;<span>@item?.StartDate.Value.ToShortDateString()</span>&nbsp;until&nbsp;<span>@item?.EndDate.Value.ToShortDateString()</span></small>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                                    <div>
+                                                        <p class="mb-0">@seatsLeft</p>
+                                                        <small>Seats Left</small>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                                    <div>
+                                                        <p class="mb-0">@item?.MissionDeadline.Value.ToShortDateString()</p>
+                                                        <small>Deadline</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    else if (item.MissionType == "Goal")
+                                    {
+                                        decimal? progressBarVal = ((decimal)achievedValue / (decimal)goalValue) * 100;
+                                        var totalVolForGoalMiss = Model?.MissionApplicationList?.Count(missionApp => missionApp.MissionId == item.MissionId && missionApp.Mission.MissionType == "Goal" && missionApp.ApprovalStatus == "APPROVED");
+                                        <div class="px-3">
+                                            @if (item.MissionSkills.Count() > 0)
+                                            {
+                                                <i class="bi bi-tools pe-2"><p class="px-2 mb-0 d-inline">Skills</p></i>
+                                                <div class="d-flex justify-content-start flex-wrap align-items-center">
+                                                    @foreach (var missSkills in item.MissionSkills)
+                                                    {
+                                                        <small>@missSkills.Skill.SkillName,&nbsp;&nbsp;&nbsp;</small>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                            <div class="border text-center px-3" id="missionPeriod">
+                                                <small>@goalMission?.GoalObjectiveText</small>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                                    <div>
+                                                        <p class="mb-0">@totalVolForGoalMiss</p>
+                                                        <small>Volunteered</small>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <img class="me-2" height="25" src="/images/achieved.png" alt="">
+                                                    <div>
+                                                        <div class="progress" style="width: 100px; height: 15px;">
+                                                            <div class="progress-bar" role="progressbar" style="width: @progressBarVal%; background: #F88634;"
+                                                     aria-valuenow="@progressBarVal" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        @if (@achievedValue >= @goalValue)
+                                                        {
+                                                            <small>Fully Achieved</small>
+                                                        }
+                                                        else
+                                                        {
+                                                            <small><span>@achievedValue</span> achieved</small>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+
+
+                                    <div>
+                                        <a asp-controller="VolPage" asp-action="VolunteeringMissionPage" asp-route-id="@item?.MissionId"
+                               class="btn d-flex align-items-center justify-content-center mx-auto my-4"
+                               id="applyNowBtn">
+                                            <p class="view-details mb-0 pe-4 h6">Apply Now</p>
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- missions gridview and listview end -->
+        }
+        else
+        {
+            <!-- no mission found section start -->
+            <div class="container text-center">
+                <h3>No Mission Found</h3>
+                <div>
+                    <a asp-controller="Home" asp-action="Index" class="btn d-flex align-items-center justify-content-center mx-auto my-4 explore-more-mission"
+               style="width: 300px; border-radius: 20px;">
+                        <p class="mb-0 pe-4 h6">Explore missions</p>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- no mission found section end -->
+        }
+        <!-- Pagination -->
+        <div class="container-fluid mb-5 mb-sm-5">
+            @if (pager.TotalPages > 0)
+            {
+                <ul class="pagination justify-content-center mt-4 px-5" id="pagination">
+
+                    @if (pager.CurrentPage > 1)
+                    {
+                        <li class="page-item mx-2">
+                            <a class="page-link cursor" onclick="loadMissions(pg=1)"> &laquo; </a>
+                        </li>
+                        <li class="page-item mx-2">
+                            <a class="page-link cursor" onclick="loadMissions(pg=@(pager.CurrentPage - 1))"> &lsaquo; </a>
+                        </li>
+                    }
+
+                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                    {
+                        <li class="page-item mx-2">
+                            <a class="page-link cursor @(pge == pager.CurrentPage ? "active" : "")" onclick="loadMissions(pg=@pge)"> @pge </a>
+                        </li>
+                    }
+
+                    @if (pager.CurrentPage < pager.TotalPages)
+                    {
+                        <li class="page-item mx-2">
+                            <a class="page-link cursor" onclick="loadMissions(pg=@(pager.CurrentPage + 1)) "> &rsaquo; </a>
+                        </li>
+                        <li class="page-item mx-2">
+                            <a class="page-link cursor" onclick="loadMissions(pg=@pager.TotalPages)"> &raquo; </a>
+                        </li>
+                    }
+
+
+                </ul>
+            }
+        </div>
+    }
+</div>
+<!-- mission heading and listing end -->
+
+ <script>
+    if (sessionStorage.getItem("viewtype") === "list") {
+        showList();
+    }
+    else {
+        showGrid();
+    }
+    function showList() {
+        sessionStorage.setItem("viewtype", "list");
+        var $gridCont = $(".grid-container");
+        $gridCont.addClass("list-view");
+        $('.grid-card-view').addClass('d-none');
+        $('.list-card-view').removeClass('d-none');
+    }
+    function showGrid() {
+        sessionStorage.setItem("viewtype", "grid");
+        var $gridCont = $(".grid-container");
+        $gridCont.removeClass("list-view");
+        $('.list-card-view').addClass('d-none');
+        $('.grid-card-view').removeClass('d-none');
+    }
+
+    $(document).on("click", ".btn-grid", showGrid);
+    $(document).on("click", ".btn-list", showList);
+
+    $(window).resize(function () {
+        if ($(window).width() <= 767) {
+            showGrid();
+        }
+    });
+</script>
